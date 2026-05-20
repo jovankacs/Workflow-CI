@@ -2,7 +2,6 @@ import pandas as pd
 import numpy as np
 import mlflow
 import mlflow.sklearn
-import dagshub
 import matplotlib.pyplot as plt
 import argparse
 import os
@@ -22,9 +21,16 @@ parser.add_argument('--min_samples_split', type=int, default=2)
 args = parser.parse_args()
 
 # ============================================================
-# INISIALISASI DAGSHUB & MLFLOW
+# INISIALISASI MLFLOW (via environment variable, tanpa dagshub.init)
 # ============================================================
-dagshub.init(repo_owner='jovankacs', repo_name='Membangun_model', mlflow=True)
+MLFLOW_TRACKING_URI = os.environ.get(
+    "MLFLOW_TRACKING_URI",
+    "https://dagshub.com/jovankacs/Membangun_model.mlflow"
+)
+mlflow.set_tracking_uri(MLFLOW_TRACKING_URI)
+mlflow.set_experiment("heart-disease-ci")
+
+print(f"MLflow Tracking URI: {MLFLOW_TRACKING_URI}")
 
 # ============================================================
 # LOAD DATA
