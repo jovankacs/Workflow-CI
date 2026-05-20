@@ -76,8 +76,15 @@ jobs:
           RUN_ID=$(python -c "
           import mlflow, os
           mlflow.set_tracking_uri(os.environ['MLFLOW_TRACKING_URI'])
-          runs = mlflow.search_runs(experiment_names=['heart-disease-ci'], order_by=['start_time DESC'])
-          print(runs.iloc[0]['run_id'])
+          experiments = mlflow.search_experiments()
+          all_runs = []
+          for exp in experiments:
+              runs = mlflow.search_runs(experiment_ids=[exp.experiment_id], order_by=['start_time DESC'])
+              if not runs.empty:
+                  all_runs.append(runs.iloc[0])
+          import pandas as pd
+          all_runs_df = pd.DataFrame(all_runs).sort_values('start_time', ascending=False)
+          print(all_runs_df.iloc[0]['run_id'])
           ")
           echo "Run ID: $RUN_ID"
           mlflow models build-docker \
