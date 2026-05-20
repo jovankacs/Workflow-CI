@@ -11,18 +11,12 @@ from sklearn.metrics import (
     confusion_matrix, roc_auc_score, roc_curve, ConfusionMatrixDisplay
 )
 
-# ============================================================
-# ARGUMENT PARSER
-# ============================================================
 parser = argparse.ArgumentParser()
 parser.add_argument('--n_estimators', type=int, default=200)
 parser.add_argument('--max_depth', type=int, default=5)
 parser.add_argument('--min_samples_split', type=int, default=2)
 args = parser.parse_args()
 
-# ============================================================
-# LOAD DATA
-# ============================================================
 train_df = pd.read_csv('heart_preprocessing_train.csv')
 test_df = pd.read_csv('heart_preprocessing_test.csv')
 
@@ -34,9 +28,6 @@ y_test = test_df['target']
 print("Data berhasil dimuat!")
 print(f"Train shape: {X_train.shape}, Test shape: {X_test.shape}")
 
-# ============================================================
-# TRAINING (tanpa mlflow.start_run karena sudah dihandle MLProject)
-# ============================================================
 model = RandomForestClassifier(
     n_estimators=args.n_estimators,
     max_depth=args.max_depth,
